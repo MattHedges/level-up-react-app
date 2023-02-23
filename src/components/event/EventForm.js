@@ -6,6 +6,7 @@ import { getGames } from "../../managers/GameManager.js"
 
 
 
+
 export const EventForm = () => {
     const navigate = useNavigate()
     const [games, setGames] = useState([])

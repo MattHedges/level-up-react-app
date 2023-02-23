@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { getEvents } from "../../managers/EventManager.js"
 import { useNavigate } from "react-router-dom"
 import { deleteEvent } from "../../managers/EventManager.js"
+import { joinEvent, leaveEvent } from "../../managers/EventManager.js";
 
 export const EventList = (props) => {
     const [ events, setEvents ] = useState([])
@@ -15,6 +16,30 @@ export const EventList = (props) => {
     useEffect(() => {
         getEvents().then(data => setEvents(data))
     }, [])
+
+    const handleJoinEvent = (eventId) => {
+        joinEvent(eventId).then(() => {
+          const updatedEvents = events.map((event) => {
+            if (event.id === eventId) {
+              return { ...event, joined: true };
+            }
+            return event;
+          });
+          setEvents(updatedEvents);
+        });
+      };
+    
+      const handleLeaveEvent = (eventId) => {
+        leaveEvent(eventId).then(() => {
+          const updatedEvents = events.map((event) => {
+            if (event.id === eventId) {
+              return { ...event, joined: false };
+            }
+            return event;
+          });
+          setEvents(updatedEvents);
+        });
+      };
 
     const handleClick = (id) => {
         deleteEvent(id).then(refreshPage)
@@ -30,6 +55,11 @@ export const EventList = (props) => {
                         <div className="event__location">{event.location} at {event.location}</div>
                         <div className="event__game">{event.game.name}</div>
                         <div className="game__footer">
+                        {event.joined ? (
+              <button onClick={() => handleLeaveEvent(event.id)}>Leave</button>
+            ) : (
+              <button onClick={() => handleJoinEvent(event.id)}>Join</button>
+            )}
                             <button
                                 onClick={() => {
                                     navigate({ pathname: `editevent/${event.id}`})
