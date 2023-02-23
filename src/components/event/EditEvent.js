@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
-import { createEvent } from '../../managers/EventManager.js'
+import { getGenres } from '../../managers/EventManager.js'
+import { UpdateEvent } from "../../managers/EventManager.js"
+import { useParams } from "react-router-dom"
+import { getSingleEvent } from "../../managers/EventManager.js"
 import { getGames } from "../../managers/GameManager.js"
 
-
-
-
-export const EventForm = () => {
+export const EditEvent = () => {
     const navigate = useNavigate()
     const [games, setGames] = useState([])
+    const [event, setEvents] = useState([])
+    const {eventId} = useParams()
 
     /*
         Since the input fields are bound to the values of
@@ -16,17 +18,22 @@ export const EventForm = () => {
         provide some default values.
     */
     const [currentEvent, setCurrentEvent] = useState({
+        organizer: 0,
         name: "",
         date: "",
         location: "",
-        game:"",
-        organizer: ""
+        game: ""
     })
 
     useEffect(() => {
         // TODO: Get the event types, then set the state
         getGames().then(res => setGames(res))
     }, [])
+
+    useEffect(() => {
+        // TODO: Get the event types, then set the state
+        getSingleEvent(eventId).then(res => setCurrentEvent(res))
+    }, [eventId])
 
     const changeEventState = (event) => {
         const copy = { ...currentEvent }
@@ -36,7 +43,7 @@ export const EventForm = () => {
 
     return (
         <form className="eventForm">
-            <h2 className="eventForm__title">Register New Event</h2>
+            <h2 className="eventForm__title">Edit Event</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="name">Event Name: </label>
@@ -49,8 +56,8 @@ export const EventForm = () => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="date">Event Date: </label>
-                    <input type="text" name="date" required className="form-control"
-                        
+                    <input type="date" name="date" required className="form-control"
+                        value={currentEvent.date}
                         onChange={changeEventState}
                     />
                 </div>
@@ -91,17 +98,18 @@ export const EventForm = () => {
                     evt.preventDefault()
 
                     const event = {
+                        organizer: currentEvent.organizer,
                         name: currentEvent.name,
                         date: currentEvent.date,
                         location: currentEvent.location,
-                        game: currentEvent.game,
-                        }
+                        game: currentEvent.game
+                    }
 
                     // Send POST request to your API
-                    createEvent(event)
-                    .then(() => navigate("/events"))
+                    UpdateEvent(event, eventId)
+                        .then(() => navigate("/events"))
                 }}
-                className="btn btn-primary">Create</button>
+                className="btn btn-primary">Update</button>
         </form>
     )
 }
