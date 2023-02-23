@@ -49,7 +49,7 @@ export const EventForm = () => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="date">Event Date: </label>
-                    <input type="text" name="date" required className="form-control"
+                    <input type="date" name="date" required className="form-control"
                         
                         onChange={changeEventState}
                     />

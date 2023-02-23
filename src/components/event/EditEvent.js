@@ -22,7 +22,7 @@ export const EditEvent = () => {
         name: "",
         date: "",
         location: "",
-        game: ""
+        game: []
     })
 
     useEffect(() => {
@@ -83,7 +83,7 @@ export const EditEvent = () => {
                             copy.game = parseInt(event.target.value)
                             setCurrentEvent(copy)
                         }}>
-                        <option value="0">Choose:</option>
+                        {/* <option value="0">Choose:</option> */}
                         {games.map(game => ( 
                                     <option key={`game--${game.id}`} value={game.id} name={game.name}>{game.name}</option>                         
                             ))}

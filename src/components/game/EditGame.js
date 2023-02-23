@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom"
 export const EditGame = () => {
     const navigate = useNavigate()
     const [genres, setGenres] = useState([])
-    const [game, setGames] = useState([])
     const {gameId} = useParams()
 
     /*
@@ -28,8 +27,13 @@ export const EditGame = () => {
     }, [])
 
     useEffect(() => {
-        // TODO: Get the game types, then set the state
-        getSingleGame(gameId).then(res => setCurrentGame(res))
+        getSingleGame(gameId).then(res => {
+            setCurrentGame({
+                name: res.name,
+                description: res.description,
+                genre: res.genre.id // set the genre property with the ID of the genre object
+            })
+        })
     }, [gameId])
 
     const changeGameState = (event) => {
