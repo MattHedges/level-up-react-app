@@ -77,13 +77,13 @@ export const EditEvent = () => {
                 <select
                         name="game"
                         className="form-control"
-                        value={games.name}
+                        value={currentEvent.game.id}
                         onChange={(event) => {
                             const copy = { ...currentEvent }
-                            copy.game = parseInt(event.target.value)
+                            copy.game.id = parseInt(event.target.value)
                             setCurrentEvent(copy)
                         }}>
-                        {/* <option value="0">Choose:</option> */}
+                        <option value="0">Choose:</option>
                         {games.map(game => ( 
                                     <option key={`game--${game.id}`} value={game.id} name={game.name}>{game.name}</option>                         
                             ))}
@@ -102,7 +102,7 @@ export const EditEvent = () => {
                         name: currentEvent.name,
                         date: currentEvent.date,
                         location: currentEvent.location,
-                        game: currentEvent.game
+                        game: currentEvent.game.id
                     }
 
                     // Send POST request to your API
